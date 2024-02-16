@@ -9,7 +9,7 @@ export default async function MovieVideos(id) {
       {videos.map((video) => (
         <iframe
           key={video.id}
-          src={`http://youtube.com/embed/${video.key}`}
+          src={`https://youtube.com/embed/${video.key}`}
           title={video.name}
           allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
           allowFullScreen
