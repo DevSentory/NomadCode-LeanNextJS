@@ -1,0 +1,110 @@
+[SSR VS CSR]
+
+모든 컴포넌트와 페이지들은 먼저 backend에서 render가 된다.
+render된것들은 HTML로 변환된다.
+변환된 HTML이 브라우저에 넘겨져서 사용자에게 화면을 보여준다.
+
+rendering ? JavScript function을 가져와서 브라우저가 이해할 수 있는 HTML로 변환하는 작업
+
+[Hydration process]
+
+/about-us 접속 ---> next.js는 컴포넌트를 Dummy HTML 변환 :)  
+----> 사용자가 페이지에 도착하면 프레임워크는 Load 시작 
+----> Dummy HTML에 새로운 React Application를 초기화
+
+Hydration == interactive
+
+["use client"]
+
+모든 컴포넌트와 페이지들은 먼저 backend에서 render가 된다(SSR).고 했지만
+client에서 interactive하게 만들어질 컴포넌트는 "use client"지시어를 갖고 있는 컴포넌트들이다.
+
+= 오직 client에서만 render된다는 것을 의미하지 않는다. 
+  backend에서 render되고 frontend에서 hydrate됨을 의미한다. 🟢 (중요)
+
+=========================================================================================
+
+정리
+
+1. 사용자가 웹 페이지 요청
+2. SSR을 통해서 지루한(?) Dummy HTML이 생성되어 response로 전달됨
+3. 전달 받은 화면을 사용자에게 보여줌
+4. 전달 받음과 동시에 HTML위에 React Application과 next.js application을 생성
+4. Dummy HTML은 4번 과정을 거치면서 interactive하게 만들어진다.
+   (사용자는 처리 과정을 알 수 없음)  
+
+
+ServerComponent는 Client component를 가질 수 있지만, 그 반대는 될 수 없다.
+
+1. 모든 것이 SSR된다.
+2. 모든 것이 Pre Render되어서 HTML롤 변환된다.
+3. HTML이 사용자에게 넘어간다.
+4. 그 후에 client component만이 hydrate되고 interactive하게 된다.
+
+오호.. server component는 클라이언트로 가지 않기 때문에 DB 통신을 할 수 있겠네
+보안성 문제를 신경쓰지 않고 ㅎㅎ 좋네 
+
+=========================================================================================
+
+[Layouts]
+
+재사용 하는 요소들이 있어서 layouts을 사용한다.
+
+실제로 next.js는 해당 컴포넌트로 바로가서 렌더링하는게 아니라,
+layout component로 먼저가서 export된 디폴트 컴포넌트를 렌더링한다.
+
+잘 이해가 안되긴하는데..
+/about-us URL로 이동 ----> 
+next.js는 layout 컴포넌트를 렌더링 하고 --->
+이동하려는 페이지를 URL을 통해 인식하여 layout 컴포넌트 안에 해당 페이지를 렌더링 하게 된다.
+
+어떤 페이지로 이동 할 때마다 레이아웃 컴포넌트가 렌더링되고 내가 가려는 페이지가 children된다.
+
+레아웃은 중첩이 가능하다.
+
+[Metadata]
+
+Componet 관리 폴더를 () 소괄호를 이용해 묶으면 URL로 인식하지 않는다.
+페이지 head에 표시된다.
+
+레이아웃과 페이지만 메타데이터를 관리할 수 있다.
+
+메타데이터는 template을 만들 수 있으며, 병합될 수 있다.
+
+[Dynamic Routes]
+
+그룹화
+
+props로 데이터를 가져올 수 있다.
+
+다이나믹 데이터는 [Nmae]로 가질 수 있다.
+
+[Client Side]
+
+Client component에서는 Metadata를 export할 수 없다. (일단 나중에 고침)
+server component에서의 fetch는 useEffect, useState를 안써도된다.
+React App <===> API <=====> DB 형식으로 구현해야했다.
+
+[Server Side]
+
+server component를 사용했을 떄 fetch를 사용하면 자동으로 캐싱 시켜준다.
+백엔드에서 실행한다.
+
+[Loading component]
+
+loading 파일을 제공해주면 해당 파일이 페이지에 나타난다.
+페이지 로딩이 끝나면 next.js에서 loading 페이지를 page의 컴포넌트로 바꿔준다.
+next.js는 기본적으로 우리의 페이짚를 작은 HTML 부분으로 나눠서 준비된 HTML 부분을 브라우저에 준다.
+(사용자에게 보일 준비가된 HTML)
+파일명은 반드시 loding이어야하고, page 파일 옆에 있어야한다.
+프레임워크에 의해 사용된다.
+
+promise.all([])
+
+[Suspense]
+
+fallback 이라는 prop이 있고, componrnt가 await되는 동안 표시할 메시지를 render할 수 있게 해준다.
+
+[error]
+
+에러 컴포넌트는 반드시 client component에 추가되어야한다.
