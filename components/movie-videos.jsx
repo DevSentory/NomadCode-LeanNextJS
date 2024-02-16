@@ -1,6 +1,6 @@
 import { error } from 'console'
+import { API_URL } from '../app/constants'
 import styles from '../styles/movie-video.module.css'
-import { API_URL } from '../app/(home)/page'
 
 export default async function MovieVideos(id) {
   const videos = await getVideos(id)
